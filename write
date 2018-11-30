@@ -12,3 +12,6 @@ io.write(home_path)
 
 -- close the file that is being operated on
 io.close(file)
+
+-- move the file to a new folder and change the name
+os.execute("mv test.lua destination/success.lua")
