@@ -1,0 +1,14 @@
+-- global variable with the value of the home environmental variable with a / appended
+home_path = os.getenv('HOME') .. '/'
+
+-- declare the file to be operated on
+file = io.open("test.lua", "w")
+
+-- decleare the output file to write to
+io.output(file)
+
+-- write the value of the variable home_path to the open file
+io.write(home_path)
+
+-- close the file that is being operated on
+io.close(file)
