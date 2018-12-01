@@ -1,0 +1,11 @@
+#!/usr/bin/env lua
+
+dirname = "xrdb"
+
+os.execute("mkdir " .. dirname)
+
+-- -- --
+
+require "lfs"
+
+lfs.mkdir("xrdb")
