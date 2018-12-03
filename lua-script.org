@@ -1,0 +1,127 @@
+I don't know anything about Logitech mice so I will try to explain things using a simplified, pure Lua example. Lets model the autoattack script as a loop that prints "A" and "B" alternatively. The "A" corresponds to the first part of your loop (press and release A) and the "B" represents the second part (press and release S and A).
+
+
+#+begin_src lua
+function autoattack()
+    while true do
+        print("A")
+        print("B")
+    end
+end
+
+autoattack()
+#+end_src
+
+So far we are OK but the loop will obviously run forever and we need to add a way to stop it. I think what you are trying to do is something along the lines of:
+
+#+begin_src lua
+local autoattacking = false
+
+function autoattack()
+    autoattacking = true
+    while true do
+        print("A")
+        if not autoattacking then break end
+        print("B")
+        if not autoattacking then break end
+    end
+end
+
+function stop_autoattack()
+    autoattacking = false
+end
+
+autoattack()    
+stop_autoattack()
+#+end_src
+
+However, since autoattack is an infinite loop, stop_autoattack never runs and the autoattacking flag never gets updated. How can we fix this?
+
+* Polling
+
+Instead of calling a function and setting a flag to stop the loop, what if we could call some code to see if the loop should be stopped or not?
+
+#+begin_src lua
+function continue_autoattack()
+    print("continue autoattacking? y/n")
+    return (io.read("*l") == "y")
+end 
+
+function autoattack()
+    while true do
+        print("A")
+        if not continue_autoattack() then break end
+        print("B")
+        if not continue_autoattack() then break end
+    end
+end
+
+autoattack()
+#+end_src
+
+In your mouse this would probably mean using some sort of isKeyPressed function, if its available in the API. Its also important to note that the autoattack loop is still an infinite loop - its just that we changed it so it is in control of its stopping condition.
+
+* Coroutines
+
+If we want to keep the code to stop the loop outside the loop we will need a way to run the autoattack loop one step at a time. Here is an example:
+
+#+begin_src lua
+local state = 1
+function autoattack_step()
+    if state == 1 then
+        print("A")
+        state = 2
+    elseif state == 2
+        print("B")
+        state = 1
+    elseif state == 3
+        print("STOPPED")
+        --state remains as 3
+    else
+        error("bad state") -- defensive programming; I hate if/elseif without an else
+    end
+end
+
+function stop_autoattack()
+    state = 3
+end
+
+autoattack_step()
+autoattack_step()
+autoattack_step()
+stop_autoattack()
+autoattack_step()
+#+end_src
+
+Since we broke up the autoattack loop, we now have a chance to call stop_autoattack between calls to autoattack_step. To do this in your mouse script, I think stop_autoattack can go in "release button" handlers but I dont know where I would put the autoattack_step calls. Maybe the API includes something similar to setTimeout or setInterval in Javascript.
+
+As for coroutines, where do they come in? Did you notice how we needed to do some substantial code refactoring to break the loop into single step chunks for autoattack_step? Coroutines are a Lua feature that lets you write code using loops while still being able to run them "one step at a time". When a coroutine reaches a coroutine.yield, it returns back to its caller. The thing is that when you call coroutine.resume again the coroutine will continue executing from where it stopped instead of going back to the start like a normal function would.
+
+#+begin_src lua
+local autoattacking = true
+
+ autoattack = coroutine.create(function()
+     while true do
+         print("A")
+         coroutine.yield()
+         if not autoattacking then break end            
+         print("B")
+         coroutine.yield()
+         if not autoattacking then break end
+     end
+ end)
+
+ function stop_autoattack()
+     autoattacking = false
+ end
+
+ coroutine.resume(autoattack)
+ coroutine.resume(autoattack)
+ coroutine.resume(autoattack)
+ stop_autoattack()
+ coroutine.resume(autoattack)
+ coroutine.resume(autoattack)
+#+end_src
+
+Very often, coroutines let you keep code more readable, without turning inside out with lots of explicit "state" variables. We still need to have some "higher up" code calling coroutine.resume though, just like we needed to have some higher level code calling autoattack_step.
+
