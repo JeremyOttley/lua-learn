@@ -1,0 +1,9 @@
+os.rename('oldname', 'newname')
+
+os.remove('filename')
+
+os.getenv(varname)
+
+os.exit([code [, close])
+
+os.execute([command])
