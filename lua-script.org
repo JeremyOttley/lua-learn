@@ -1,4 +1,6 @@
-I don't know anything about Logitech mice so I will try to explain things using a simplified, pure Lua example. Lets model the autoattack script as a loop that prints "A" and "B" alternatively. The "A" corresponds to the first part of your loop (press and release A) and the "B" represents the second part (press and release S and A).
+Q: I am starting to learn how to use Lua scripting for different game profile with logitech software. I tried to create this attack combo script.
+
+A: I don't know anything about Logitech mice so I will try to explain things using a simplified, pure Lua example. Lets model the autoattack script as a loop that prints "A" and "B" alternatively. The "A" corresponds to the first part of your loop (press and release A) and the "B" represents the second part (press and release S and A).
 
 
 #+begin_src lua
