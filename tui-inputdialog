@@ -1,0 +1,22 @@
+#!/usr/bin/env lua
+
+local ltui        = require("ltui")
+local application = ltui.application
+local event       = ltui.event
+local rect        = ltui.rect
+local window      = ltui.window
+local dialog_input = ltui.inputdialog:new("dialog.input", rect {0, 0, 50, 8})
+local demo        = application()
+
+
+function demo:init()
+    application.init(self, "demo")
+    self:background_set("blue")
+
+    dialog_input:text():text_set("please input text:")
+    dialog_input:button_add("no", "< No >", function (v) dialog_input:quit() end)
+    dialog_input:button_add("yes", "< Yes >", function (v) dialog_input:quit() end)
+    self:insert(dialog_input, {centerx = true, centery = true})
+end
+
+demo:run()
