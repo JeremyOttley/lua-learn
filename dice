@@ -1,6 +1,8 @@
 --- Dice
 
 -- generates a random number between 1 and 6
+main.random(6)
+
 -- once you run the script, it "rolls"
 -- a roll returns a random number between 1 and 6
 
@@ -9,8 +11,11 @@
 Dice = {}
 
 function roll() {
-  local roll_result = main.random(6)
+  local roll_result = math.random(6)
   ***
   ***
   return roll_result
 }
+
+
+
