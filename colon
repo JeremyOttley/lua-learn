@@ -1,0 +1,10 @@
+-- The colon syntax is used for defining methods, that is, functions that have an implicit extra parameter self. Thus, the statement
+function t.a.b.c:f (params) body end
+
+-- the above is syntactic sugar for
+t.a.b.c.f = function (self, params) body end
+
+--A call v:name(args) is syntactic sugar for v.name(v,args), except that v is evaluated only once.
+
+-- self is just the auto-magic name given in the syntax sugar used as part of the colon assignment. 
+-- It isn't a necessary name. The first argument is the first argument whatever the name happens to be.
