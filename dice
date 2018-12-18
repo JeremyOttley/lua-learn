@@ -17,5 +17,10 @@ function roll() {
   return roll_result
 }
 
-
+roll = function()
+math.randomseed(os.time())
+math.random(); math.random(); math.random()
+print(math.random())
+end
+-- roll() # the problem is this comes out to 0.385734859436
 
