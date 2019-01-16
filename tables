@@ -1,0 +1,5 @@
+local t = {}
+
+t.score = 10
+
+print(t.score)
