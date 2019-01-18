@@ -1,4 +1,5 @@
--- Requiries Penlight to be installed locally
+--[[ Requiries Penlight to be installed locally
+-- -- to use place at top of file: require("Penlight")
 
 set = require("pl.Set")
 app = require("pl.app")
