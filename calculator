@@ -1,0 +1,9 @@
+Calculator = {}
+
+function Calculator:add(x, y)
+  return x + y
+end
+
+TI83 = Calculator:new()
+
+print(TI83:add(1,2))
